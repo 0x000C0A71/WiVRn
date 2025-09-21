@@ -350,7 +350,8 @@ xrt_result_t wivrn::wivrn_session::create_session(std::unique_ptr<wivrn_connecti
 		self->feedback_csv.open(dump_file);
 	}
 
-	self->thread = std::jthread(&wivrn_session::run, self.get());
+	const auto got = self.get();
+	self->thread = std::jthread([got](std::stop_token st) { got->run(st); });
 	*out_xsysd = self.release();
 	return XRT_SUCCESS;
 }
