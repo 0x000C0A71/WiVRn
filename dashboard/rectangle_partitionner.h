@@ -76,10 +76,12 @@ QRectF rectangle_from_encoder(const encoder & enc)
 
 int hovered_rectangle(QPointF position, const std::vector<encoder> & encoders)
 {
-	for (const auto [i, enc]: std::views::enumerate(encoders))
+	int i = 0;
+	for (const auto enc: encoders)
 	{
 		if (rectangle_from_encoder(enc).contains(position))
 			return i;
+		i++;
 	}
 
 	return -1;
@@ -118,7 +120,8 @@ std::vector<edge> horizontal_edges(const std::vector<encoder> & rectangles)
 {
 	std::vector<edge> edges;
 
-	for (const auto & [i, enc]: std::views::enumerate(rectangles))
+	int i = 0;
+	for (const auto &enc: rectangles)
 	{
 		if (enc.top() > epsilon)
 		{
@@ -129,6 +132,7 @@ std::vector<edge> horizontal_edges(const std::vector<encoder> & rectangles)
 		{
 			edges.emplace_back(side::bottom, i, enc.bottom(), enc.left(), enc.right());
 		}
+		i++;
 	}
 
 	return edges;
@@ -138,7 +142,8 @@ std::vector<edge> vertical_edges(const std::vector<encoder> & rectangles)
 {
 	std::vector<edge> edges;
 
-	for (const auto & [i, enc]: std::views::enumerate(rectangles))
+	int i = 0;
+	for (const auto &enc: rectangles)
 	{
 		if (enc.left() > epsilon)
 		{
@@ -149,6 +154,7 @@ std::vector<edge> vertical_edges(const std::vector<encoder> & rectangles)
 		{
 			edges.emplace_back(side::right, i, enc.right(), enc.top(), enc.bottom());
 		}
+		i++;
 	}
 
 	return edges;
@@ -583,10 +589,12 @@ public:
 		if (not m_settings)
 			return;
 
-		for (auto [i, enc]: std::views::enumerate(m_settings->encoders()))
+		int i = 0;
+		for (auto enc: m_settings->encoders())
 		{
 			bool is_selected = i == m_currentIndex and isEnabled();
 			paint_single_rectangle(painter, enc, is_selected);
+			i++;
 		}
 
 		if (not hovered.empty() and selection.empty())

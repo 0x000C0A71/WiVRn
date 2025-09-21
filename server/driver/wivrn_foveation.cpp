@@ -406,7 +406,8 @@ static void fill_ubo(
 	ubo[0] = offset;
 	if (flip)
 		ubo[0] += size;
-	for (auto [i, n]: std::ranges::enumerate_view(params))
+	int i = 0;
+	for (auto n: params)
 	{
 		const int n_source = std::abs(n_ratio - int(i)) + 1;
 		for (size_t j = 0; j < n; ++j)
@@ -419,6 +420,7 @@ static void fill_ubo(
 			ubo = ubo.subspan(1);
 			--count;
 		}
+		i++;
 	}
 	if (not ubo.empty())
 		std::ranges::fill(ubo, ubo[0]);
